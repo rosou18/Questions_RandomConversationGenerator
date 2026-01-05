@@ -185,13 +185,25 @@ let questions = [
   {number: 160, text: "Would you rather be in debt or have someone owe you money?"},
   {number: 82, text: "Would you rather ghost someone or be ghosted?"},
   {number: 81, text: "When was the last time you apologised?"},
-  {number: 194, text: "What's your favourite holiday?"}
+  {number: 194, text: "What's your favourite holiday?"},
+  {number: 195, text: "What was your childhood favorite meal?"},
+  {number: 196, text: "Are you more analogue or digital?"},
+  {number: 197, text: "If you could keep only 3 objects in your room because of a fire, which would they be?"},
+  {number: 198, text: "Which is your favourite/most influential artist at the moment?"},
+  {number: 199, text: "How did you learn Santa wasn't real?"},
+  {number: 200, text: "What would you buy if you had more money than sense?"},
+  {number: 201, text: "Which celebrity would you want to be friends with?"},
+  {number: 202, text: "Have dinner with - what would you ask them?"},
+  {number: 203, text: "Would you rather be balding or going through menopause?"},
+  {number: 204, text: "What's your favourite weather?"},
+  {number: 205, text: "Do you think a friendship breakup is worse than a romantic breakup?"}
 ];
 
 let currentQuestion = {};
+let previousQuestion = {};
 let revealProgress = 0;
 let isDarkMode = false;
-let scrollText = "RANDOM CONVERSATION GENERATOR";
+let scrollText = "RANDOM CONVERSATION GENERATOR by Rose Kessler";
 let scrollTextBottom = "TAP FOR NEXT QUESTION";
 let scrollX = 0;
 let scrollOnTop = true;
@@ -325,17 +337,24 @@ function touchStarted() {
 }
 
 function generateNewQuestion() {
-  // Fully random selection using crypto-quality random if available
-  let randomIndex;
-  if (window.crypto && window.crypto.getRandomValues) {
-    let array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    randomIndex = array[0] % questions.length;
-  } else {
-    randomIndex = floor(random(questions.length));
-  }
+  let newQuestion;
+  let attempts = 0;
   
-  currentQuestion = questions[randomIndex];
+  do {
+    let randomIndex;
+    if (window.crypto && window.crypto.getRandomValues) {
+      let array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      randomIndex = array[0] % questions.length;
+    } else {
+      randomIndex = floor(random(questions.length));
+    }
+    newQuestion = questions[randomIndex];
+    attempts++;
+  } while (newQuestion.number === previousQuestion.number && attempts < 10);
+  
+  previousQuestion = currentQuestion;
+  currentQuestion = newQuestion;
   revealProgress = 0;
 }
 
@@ -345,3 +364,4 @@ function windowResized() {
 </script>
 </body>
 </html>
+
