@@ -203,11 +203,12 @@ let currentQuestion = {};
 let previousQuestion = {};
 let revealProgress = 0;
 let isDarkMode = false;
-let scrollText = "RANDOM CONVERSATION GENERATOR by Rose Kessler";
+let scrollText = "RANDOM CONVERSATION GENERATOR";
 let scrollTextBottom = "TAP FOR NEXT QUESTION";
 let scrollX = 0;
 let scrollOnTop = true;
 let scrollDirection = 1;
+let bottomScrollCounter = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -232,7 +233,7 @@ function drawScrollingText() {
   textSize(scrollSize);
   textStyle(NORMAL);
   
-  let currentText = scrollOnTop ? scrollText : scrollTextBottom;
+  let currentText = scrollOnTop ? scrollText : (bottomScrollCounter % 2 === 1 ? "by Rose Kessler" : scrollTextBottom);
   let y = scrollOnTop ? 40 : height - 20;
   
   text(currentText, scrollX, y);
@@ -242,12 +243,13 @@ function drawScrollingText() {
   if ((scrollDirection === 1 && scrollX > width) || (scrollDirection === -1 && scrollX < -textW)) {
     scrollOnTop = !scrollOnTop;
     scrollDirection *= -1;
+    if (!scrollOnTop) bottomScrollCounter++;
     resetScroll();
   }
 }
 
 function resetScroll() {
-  let currentText = scrollOnTop ? scrollText : scrollTextBottom;
+  let currentText = scrollOnTop ? scrollText : (bottomScrollCounter % 2 === 1 ? "by Rose Kessler" : scrollTextBottom);
   scrollX = scrollDirection === 1 ? -textWidth(currentText) : width;
 }
 
@@ -258,10 +260,10 @@ function drawQuestion() {
   
   fill(isDarkMode ? 255 : 0);
   
-  // Responsive sizing
-  let questionSize = windowWidth < 600 ? 18 : 26;
+  // Responsive sizing - bigger
+  let questionSize = windowWidth < 600 ? 24 : 32;
   let margin = windowWidth < 600 ? 30 : 60;
-  let lineHeight = windowWidth < 600 ? 26 : 35;
+  let lineHeight = windowWidth < 600 ? 32 : 42;
   
   textSize(questionSize);
   textAlign(LEFT, CENTER);
@@ -364,4 +366,3 @@ function windowResized() {
 </script>
 </body>
 </html>
-
